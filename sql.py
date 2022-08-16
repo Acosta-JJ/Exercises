@@ -92,6 +92,17 @@ def question3(dbSQL):
     return result
 
 
+def question4(dbSQL):
+    result = dbSQL.execute('''SELECT nombre_aerolinea
+                        FROM aerolineas 
+                        WHERE id_aerolinea in
+                        (SELECT id_aerolinea
+                        FROM vuelos
+                        GROUP BY dia,id_aerolinea,id_movimientos
+                        HAVING COUNT(id_aerolinea) > 2)''').fetchall()
+    return result
+
+
 if __name__ == "__main__":
 
     databaseName = 'test.db'
@@ -110,6 +121,8 @@ if __name__ == "__main__":
     print("The answer to the second Question is: \n" + str(result))
     result = question3(dbSQL)
     print("The answer to the third Question is: \n" + str(result))
+    result = question4(dbSQL)
+    print("The answer to the fourth Question is: \n" + str(result))
 
     databaseConnection.commit()
     databaseConnection.close()
