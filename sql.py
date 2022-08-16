@@ -50,15 +50,36 @@ def fillDatabases(dbSQL):
     
     
 def question1(dbSQL):
-    result = dbSQL.execute('''SELECT nombre_aeropuerto
-FROM aeropuertos 
-WHERE id_aeropuerto = (SELECT id_aeropuerto 
-FROM (SELECT id_aeropuerto,MAX(ad) 
-FROM (SELECT id_aeropuerto, COUNT(id_aeropuerto) ad
-FROM vuelos
-GROUP BY id_aeropuerto)))''').fetchall()
+    result = dbSQL.execute('''SELECT nombre_aeropuerto 
+                        FROM aeropuertos 
+                        WHERE id_aeropuerto in 
+                        (SELECT id_aeropuerto 
+                        FROM (SELECT id_aeropuerto, COUNT(id_aeropuerto) ab
+                        FROM vuelos
+			            GROUP BY id_aeropuerto)
+			            WHERE ab =
+                        (SELECT MAX(ad) vf 
+                        FROM (SELECT id_aeropuerto, COUNT(id_aeropuerto) ad
+                        FROM vuelos
+                        GROUP BY id_aeropuerto)))''').fetchall()
     return result
-    
+
+
+def question2(dbSQL):
+    result = dbSQL.execute('''SELECT nombre_aerolinea 
+                        FROM aerolineas 
+                        WHERE id_aerolinea in 
+                        (SELECT id_aerolinea 
+                        FROM (SELECT id_aerolinea, COUNT(id_aerolinea) ab
+                        FROM vuelos
+			            GROUP BY id_aerolinea)
+			            WHERE ab =
+                        (SELECT MAX(ad) vf 
+                        FROM (SELECT id_aerolinea, COUNT(id_aerolinea) ad
+                        FROM vuelos
+                        GROUP BY id_aerolinea)))''').fetchall()
+    return result
+
 
 if __name__ == "__main__":
 
@@ -74,6 +95,8 @@ if __name__ == "__main__":
 
     result = question1(dbSQL)
     print("The answer to the firts Question is: \n" + str(result))
+    result = question2(dbSQL)
+    print("The answer to the second Question is: \n" + str(result))
     databaseConnection.commit()
     databaseConnection.close()
 
