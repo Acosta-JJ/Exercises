@@ -49,7 +49,16 @@ def fillDatabases(dbSQL):
             dbSQL.execute("INSERT INTO movimientos(id_movimientos, nombre_movimiento) VALUES(?,?)", (int(linea[0]),linea[1]))
     
     
-
+def question1(dbSQL):
+    result = dbSQL.execute('''SELECT nombre_aeropuerto
+FROM aeropuertos 
+WHERE id_aeropuerto = (SELECT id_aeropuerto 
+FROM (SELECT id_aeropuerto,MAX(ad) 
+FROM (SELECT id_aeropuerto, COUNT(id_aeropuerto) ad
+FROM vuelos
+GROUP BY id_aeropuerto)))''').fetchall()
+    return result
+    
 
 if __name__ == "__main__":
 
@@ -63,8 +72,8 @@ if __name__ == "__main__":
     except:
         print("The database is already created")
 
-    
-
+    result = question1(dbSQL)
+    print("The answer to the firts Question is: \n" + str(result))
     databaseConnection.commit()
     databaseConnection.close()
 
