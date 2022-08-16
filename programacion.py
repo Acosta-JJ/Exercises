@@ -17,6 +17,14 @@ def getAnsweredQuestions(data):
 def lessVisitedQuestion(data):
     return min(data['items'], key=lambda x:x['view_count'])
 
+
+def getOldestQuestion(data):
+    return min(data['items'], key=lambda x:x['creation_date'])
+
+
+def getNewestQuestion(data):
+    return max(data['items'], key=lambda x:x['creation_date'])
+
 if __name__ == "__main__":
     url="https://api.stackexchange.com/2.2/search?order=desc&sort=activity&intitle=perl&site=stackoverflow"
     data = getJSON(url)
@@ -25,4 +33,9 @@ if __name__ == "__main__":
     notAnsweredQuestions = getNotAnsweredQuestions(data)
     print("The amount of NOT answered questions is: " + str(len(notAnsweredQuestions)))
     lessVisited = lessVisitedQuestion(data)
-    print("The less visited question has this visits: " + str(lessVisited['view_count']))
+    print("The least visited question has this visits: " + str(lessVisited['view_count']))
+    oldestQuestion = getOldestQuestion(data)
+    print("The oldest question has this tittle: " + oldestQuestion['title'])
+    newestQuestion = getNewestQuestion(data)
+    print("The newest question has this tittle: " + newestQuestion['title'])
+
