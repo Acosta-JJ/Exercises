@@ -81,6 +81,17 @@ def question2(dbSQL):
     return result
 
 
+def question3(dbSQL):
+    result = dbSQL.execute('''SELECT dia
+                        FROM vuelos
+                        GROUP BY dia
+                        HAVING COUNT(*) = (SELECT MAX(counts) 
+                        FROM (SELECT dia, COUNT(*) counts
+                        FROM vuelos
+                        GROUP BY dia))''').fetchall()
+    return result
+
+
 if __name__ == "__main__":
 
     databaseName = 'test.db'
@@ -97,6 +108,9 @@ if __name__ == "__main__":
     print("The answer to the firts Question is: \n" + str(result))
     result = question2(dbSQL)
     print("The answer to the second Question is: \n" + str(result))
+    result = question3(dbSQL)
+    print("The answer to the third Question is: \n" + str(result))
+
     databaseConnection.commit()
     databaseConnection.close()
 
