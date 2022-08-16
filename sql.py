@@ -98,7 +98,7 @@ def question4(dbSQL):
                         WHERE id_aerolinea in
                         (SELECT id_aerolinea
                         FROM vuelos
-                        GROUP BY dia,id_aerolinea,id_movimientos
+                        GROUP BY dia,id_aerolinea
                         HAVING COUNT(id_aerolinea) > 2)''').fetchall()
     return result
 
