@@ -4,7 +4,7 @@ import sqlite3
 
 from rx import catch
 
-def createDatabases(database):
+def createDatabases(dbSQL):
     
     dbSQL.execute('''CREATE TABLE aerolineas(
         id_aerolinea INTEGER PRIMARY KEY,
