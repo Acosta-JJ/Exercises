@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
 import sqlite3
-
-from rx import catch
+from datetime import datetime
 
 def createDatabases(dbSQL):
     
@@ -19,7 +18,7 @@ def createDatabases(dbSQL):
         nombre_movimiento TEXT NOT NULL)''')
 
     dbSQL.execute('''CREATE TABLE vuelos(
-        dia DATE PRIMARY KEY,
+        dia DATETIME2,
         id_movimientos INTEGER,
         id_aeropuerto INTEGER,
         id_aerolinea INTEGER,
@@ -28,8 +27,26 @@ def createDatabases(dbSQL):
         FOREIGN KEY(id_aerolinea) REFERENCES aerolineas(id_aerolinea))''')
     
 
+def fillDatabases(dbSQL):
+    with open("datavuelos.txt") as data:
+        for linea in data:
+            linea = linea.split()
+            dbSQL.execute("INSERT INTO vuelos(dia, id_movimientos, id_aeropuerto, id_aerolinea) VALUES(?,?,?,?)", (datetime.strptime(linea[3], '%Y-%m-%d'), int(linea[2]), int(linea[1]), int(linea[0])))
 
-    
+    with open("dataaeropuertos.txt") as data:
+        for linea in data:
+            linea = linea.split(',')
+            dbSQL.execute("INSERT INTO aeropuertos(id_aeropuerto, nombre_aeropuerto) VALUES(?,?)", (int(linea[0]),linea[1]))
+
+    with open("dataaerolineas.txt") as data:
+        for linea in data:
+            linea = linea.split()
+            dbSQL.execute("INSERT INTO aerolineas(id_aerolinea, nombre_aerolinea) VALUES(?,?)", (int(linea[0]),linea[1]))
+
+    with open("datamovimientos.txt") as data:
+        for linea in data:
+            linea = linea.split()
+            dbSQL.execute("INSERT INTO movimientos(id_movimientos, nombre_movimiento) VALUES(?,?)", (int(linea[0]),linea[1]))
     
     
 
@@ -42,8 +59,11 @@ if __name__ == "__main__":
 
     try:
         createDatabases(dbSQL)
+        fillDatabases(dbSQL)
     except:
         print("The database is already created")
+
+    
 
     databaseConnection.commit()
     databaseConnection.close()
