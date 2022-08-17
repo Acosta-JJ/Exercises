@@ -17,6 +17,12 @@ class TestMethods(unittest.TestCase):
 
     def test_lessVisitedQuestion(self):
         self.assertEqual(lessVisitedQuestion(self.dict)['view_count'],3)
+
+    def test_getOldestQuestion(self):
+        self.assertEqual(getOldestQuestion(self.dict)['creation_date'],0)
+
+    def test_getNewestQuestion(self):
+        self.assertEqual(getNewestQuestion(self.dict)['creation_date'],4)
         
 
     '''def test_default_widget_size(self):
